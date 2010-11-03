@@ -1,0 +1,30 @@
+{
+  "name": "corexit",
+  "version": "1.0",
+  "description": "Text Dispersant",
+  "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "logo.jpg",
+    "popup": "popup.html",
+    "default_title": "Corexit"
+  },
+  "permissions": [
+	 "tabs", "http://*/*", "https://*/*"
+   ],
+   "content_scripts": 
+   [ 
+   {
+      "js": [ "beforeLoad.js" ],
+      "matches": [ "http://*/*", "https://*/*", "ftp://*/*" ],
+      "all_frames": true,
+      "run_at": "document_start"
+   }, 
+   {
+      "js": [ "afterLoad.js" ],
+      "matches": [ "http://*/*", "https://*/*", "ftp://*/*" ],
+      "all_frames": true,
+      "run_at": "document_end"
+   }
+   ]
+
+}

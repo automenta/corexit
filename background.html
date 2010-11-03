@@ -1,0 +1,23 @@
+<html>
+<head>
+<script type="text/javascript">
+
+chrome.extension.onRequest.addListener(function (request, sender, callback) {
+	if (request.command == "sendText") {
+		var theTextArea = document.getElementById("text");
+		theTextArea.innerHTML = request.text;
+                //theTextArea.select();
+		//document.execCommand("Copy");
+        }
+	else if (request.command == "getText") {
+		var theTextArea = document.getElementById("text");
+		callback({command: "getText", text: theTextArea.innerHTML});
+	} else {
+		callback({command : "unknown"});
+	}
+});
+</script>
+    
+</head>
+<body><div id="text"></div></body>
+</html>
