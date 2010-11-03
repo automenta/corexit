@@ -115,8 +115,9 @@
                 }
             }
             //last frame, remaining
+            l = l.trim();
             if (l.length > 0)
-                frames.push( l.trim() );
+                frames.push( l );
 
             var panel = document.getElementById("_corexitPanel");
             var content = document.getElementById("_corexitContent");
@@ -131,10 +132,6 @@
             content.innerHTML = "No text selected.";
         }
     }
-
-    chrome.extension.sendRequest({'command' : 'getText'}, corexit);
-
-
 
     function onContentSpin(e) {
         var nDelta = 0;
@@ -232,9 +229,10 @@
     function showHelp() {
         alert("To close: Right click the top or bottom areas (when the cursor turns to cross-hairs)\n" +
             "To adjust font size: Mousewheel on bottom 'Abc' or click +/- buttons nearby."
-    );
+        );
     }
 
+    //Setup escape-key events
     document.onkeydown = function(e){
         var keycode;
         if (e == null) { // ie
@@ -245,8 +243,26 @@
         if(keycode == 27){ // escape, close box, esc
             window.close();
         }
+        else if (keycode == 37) {
+            //left
+            goPrevious();
+        }
+        else if (keycode == 38) {
+            //up
+            fontLarger();
+        }
+        else if (keycode == 39) {
+            //right
+            goNext();
+        }
+        else if (keycode == 40) {
+            //down
+            fontSmaller();
+        }
     };
-    
+
+    chrome.extension.sendRequest({'command' : 'getText'}, corexit);
+
 </script>
 
 <body onload="setup();">
