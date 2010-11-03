@@ -15,16 +15,19 @@
     #_corexitStatus {
         font-size: 30px;
         color: black;
+        -webkit-user-select:none;
     }
 
     #_corexitPrev {
         font-size: 30px;
         color: black;
+        -webkit-user-select:none;
     }
     
     #_corexitNext {
         font-size: 30px;
         color: black;
+        -webkit-user-select:none;
     }
     
 </style>
@@ -32,7 +35,8 @@
 <script>
 
     var minFrameLength = 8;
-    
+
+    var fontSize = 60;
     var text;
     var frames;
     var currentFrame;
@@ -77,6 +81,20 @@
         showFrame(currentFrame);
     }
 
+
+    function fontLarger() {
+        var content = document.getElementById("_corexitContent");
+        fontSize+=5;
+        content.style.fontSize = fontSize + "px";
+    }
+
+    function fontSmaller() {
+        var content = document.getElementById("_corexitContent");
+        fontSize-=5;
+        if (fontSize < 1) fontSize = 1;
+        content.style.fontSize = fontSize + "px";
+    }
+
     function corexit(response) {
         text = response.text;
 
@@ -118,7 +136,7 @@
 
 
 
-    function onMouseWheelSpin(e) {
+    function onContentSpin(e) {
         var nDelta = 0;
         if (!e) { // For IE, access the global (window) event object
             e = window.event;
@@ -147,22 +165,79 @@
         e.returnValue = false;  // cancel default action
     }
 
-    function setupSpin() {
+    //TODO find a way to combine with previous function
+    function onFontSpin(e) {
+        var nDelta = 0;
+        if (!e) { // For IE, access the global (window) event object
+            e = window.event;
+        }
+        // cross-bowser handling of eventdata to boil-down delta (+1 or -1)
+        if ( e.wheelDelta ) { // IE and Opera
+            nDelta= e.wheelDelta;
+            if ( window.opera ) {  // Opera has the values reversed
+                nDelta= -nDelta;
+            }
+        }
+        else if (e.detail) { // Mozilla FireFox
+            nDelta= -e.detail;
+        }
+        if (nDelta > 0) {
+            //HandleMouseSpin( 1, e.clientX, e.clientY );
+            fontLarger();
+        }
+        if (nDelta < 0) {
+            //HandleMouseSpin( -1, e.clientX, e.clientY );
+            fontSmaller();
+        }
+        if ( e.preventDefault ) {  // Mozilla FireFox
+            e.preventDefault();
+        }
+        e.returnValue = false;  // cancel default action
+    }
+
+
+    function closeWindow(event) {
+        if (event.button != 0)
+            window.close();
+    }
+
+    function setup() {
+        var panel = document.getElementById("_corexitPanel");
+        var control = document.getElementById("_corexitControl");
         var content = document.getElementById("_corexitContent");
+        var font = document.getElementById("_corexitFont");
 
         if (content.addEventListener) {
-            content.addEventListener('DOMMouseScroll', onMouseWheelSpin, false);
-            content.addEventListener('mousewheel', onMouseWheelSpin, false); // Chrome
+            content.addEventListener('DOMMouseScroll', onContentSpin, false);
+            content.addEventListener('mousewheel', onContentSpin, false); // Chrome
         }
         else {
-            content.onmousewheel= onMouseWheelSpin;
+            content.onmousewheel= onContentSpin;
         }
+
+        if (font.addEventListener) {
+            font.addEventListener('DOMMouseScroll', onFontSpin, false);
+            font.addEventListener('mousewheel', onFontSpin, false); // Chrome
+        }
+        else {
+            font.onmousewheel= onFontSpin;
+        }
+
+        content.style.fontSize = fontSize + "px";
+
+        control.onclick = closeWindow;
+
     }
-    
+
+    function showHelp() {
+        alert("To close: Right click the top or bottom areas (when the cursor turns to cross-hairs)\n" +
+              "To adjust font size: Mousewheel on bottom 'Abc' or click +/- buttons nearby."
+            );
+    }
 </script>
 
-<body onload="setupSpin();">
-<table width="100%">
+<body onload="setup();">
+<table width="100%" id="_corexitControl" onmouseover="this.style.cursor='crosshair';" oncontextmenu="closeWindow(this); return false;">
     <tr>
         <td width="33%" align="left" id="_corexitPrev">
 
@@ -176,11 +251,19 @@
     </tr>
 </table>
 
-<br/>
-
 <div id="_corexitPanel" style="width:100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans; overflow: none">
-    <div id="_corexitContent" style="font-size:60px; height: 70%; overflow: none">
+    <div id="_corexitContent" style="height: 70%; overflow: none">
     </div>
+</div>
+
+<div id="_corexitBottom" width="100%">
+    <a href="#" onclick="showHelp()">?</a>
+
+    &nbsp;
+
+    <a href="#" onclick="fontSmaller()">-</a>
+    <span id="_corexitFont">Abc</span>
+    <a href="#" onclick="fontLarger()">+</a>
 </div>
 
 </body>

@@ -2,12 +2,14 @@
 <head>
 <script type="text/javascript">
 
-var mode = 'overlay';
+//var mode = 'overlay';
 //var mode = 'newtab';
-//var mode = 'newwindow';
+var mode = 'newwindow';
 
-//var newWindowWidthScale = 0.9;
-//var newWindowHeightScale = 0.9;
+var popupWidth = 800;
+var popupHeight = 600;
+var popupLeft = 100;
+var popupTop = 100;
 
 chrome.extension.onRequest.addListener(function (request, sender, callback) {
 	if (request.command == "sendText") {
@@ -24,8 +26,7 @@ chrome.extension.onRequest.addListener(function (request, sender, callback) {
 	}
 });
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-
+function corexit() {
     var corexiturl = chrome.extension.getURL('corexit.html');
 
     if (mode === 'overlay') {
@@ -47,16 +48,37 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
            chrome.windows.create( {
                 'type': "popup",
-                'url': corexiturl
-//                'width': w,
-//                'height': h
+                'url': corexiturl,
+                'width': popupWidth,
+                'height': popupHeight,
+                'left': win.left + popupLeft,
+                'top': win.top + popupTop
            }, null);
 
         });
 
     }
 
+}
+
+
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+    corexit();
 });
+
+//chrome.contextMenus.create({
+//    type: 'separator'
+//}, null);
+chrome.contextMenus.create({
+    //'type': 'normal',
+    'title': 'Corexit',
+    'contexts': ['selection'],
+    'onclick': corexit
+}, null);
+//
+//alert(chrome.extension.lastError);
+
 </script>
     
 </head>
