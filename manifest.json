@@ -5,7 +5,6 @@
   "background_page": "background.html",
   "browser_action": {
     "default_icon": "logo.jpg",
-    "popup": "popup.html",
     "default_title": "Corexit"
   },
   "permissions": [

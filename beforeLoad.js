@@ -15,6 +15,9 @@ function onMouseUp(event) {
 	var selection = window.getSelection();
 	var selectedText = selection ? selection.toString() : "";
 
+        //unselect
+        //selection.collapseToStart();
+
 	if  (selectedText.length != 0) {
             chrome.extension.sendRequest({command : "sendText", text : selectedText});
 	}

@@ -16,6 +16,10 @@ chrome.extension.onRequest.addListener(function (request, sender, callback) {
 		callback({command : "unknown"});
 	}
 });
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+    chrome.tabs.executeScript(null, {file:'corexit.js'});
+});
 </script>
     
 </head>
