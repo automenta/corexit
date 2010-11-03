@@ -1,3 +1,4 @@
+//DEPRECATED
 
 function corexit(response) {
     var text = response.text;

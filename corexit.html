@@ -1,0 +1,133 @@
+<style>
+    body {
+        margin: 1%;
+    }
+
+    #_corexitContent {
+        margin: 1%;
+    }
+
+    #_corexitStatus {
+        font-size: 30px;
+        color: black;
+    }
+
+    #_corexitPrev {
+        font-size: 30px;
+        color: black;
+    }
+    
+    #_corexitNext {
+        font-size: 30px;
+        color: black;
+    }
+    
+</style>
+
+<script>
+
+    var minFrameLength = 8;
+    
+    var text;
+    var frames;
+    var currentFrame;
+
+    function showFrame(f) {
+        var content = document.getElementById("_corexitContent");
+        content.innerHTML = frames[f];
+
+        var status = document.getElementById("_corexitStatus");
+        status.innerHTML = (f+1) + '/' + frames.length;
+
+        var prev = document.getElementById("_corexitPrev");
+        if (f == 0) {
+            prev.innerHTML = '&nbsp;';
+        }
+        else {
+            prev.innerHTML = '<a href="#" onClick="goPrevious();">&lt;----</a>';
+        }
+
+        var next = document.getElementById("_corexitNext");
+        if (f == frames.length-1) {
+            next.innerHTML = '&nbsp;';
+        }
+        else {
+            next.innerHTML = '<a href="#" onClick="goNext();">----&gt;</a>';
+        }
+
+    }
+
+    function goPrevious() {
+        currentFrame--;
+        if (currentFrame < 0) currentFrame = 0;
+
+        showFrame(currentFrame);
+    }
+
+    function goNext() {
+        currentFrame++;
+        if (currentFrame > frames.length-1)
+            currentFrame = frames.length-1;
+
+        showFrame(currentFrame);
+    }
+
+    function corexit(response) {
+        text = response.text;
+
+        if (text.length > 0) {
+            currentFrame = 0;
+
+            var i = text.replace(". ", ".\n");
+            i = i.replace("? ", "?\n");
+            i = i.replace("! ", "!\n");
+
+            var preframes = i.split("\n");
+
+            var l = '';
+            frames = [];
+            for (i = 0; i < preframes.length; i++) {
+                l += preframes[i];
+                if (l.length > minFrameLength) {
+                    frames.push( l.trim() );
+                    l = '';
+                }
+            }
+            //last frame, remaining
+            if (l.length > 0)
+                frames.push( l.trim() );
+
+            var panel = document.getElementById("_corexitPanel");
+            var content = document.getElementById("_corexitContent");
+
+            var prev = document.getElementById("_corexitPrev");
+            var next = document.getElementById("_corexitNext");
+
+            showFrame(currentFrame);
+        }
+    }
+
+    chrome.extension.sendRequest({'command' : 'getText'}, corexit);
+</script>
+
+<table width="100%">
+    <tr>
+        <td width="33%" align="left" id="_corexitPrev">
+
+        </td>
+        <td width="33%" align="center" id="_corexitStatus">
+
+        </td>
+        <td width="33%" align="right" id="_corexitNext">
+
+        </td>
+    </tr>
+</table>
+
+<br/>
+
+<div id="_corexitPanel" style="width: 100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans">
+    <div id="_corexitContent" style="height: 90%; font-size:60px">
+    </div>
+</div>
+

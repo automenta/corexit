@@ -18,7 +18,14 @@ chrome.extension.onRequest.addListener(function (request, sender, callback) {
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.executeScript(null, {file:'corexit.js'});
+    //chrome.tabs.executeScript(null, {file:'corexit.js'});
+
+    var index = chrome.tabs.getSelected(null, function(tab) {
+        var index = tab.index+1;
+        chrome.tabs.create({'index': index, 'url': chrome.extension.getURL('corexit.html')}, function(tab) {
+            // Tab opened.
+        });
+    });
 });
 </script>
     
