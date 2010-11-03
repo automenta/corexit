@@ -3,6 +3,11 @@
         margin: 1%;
     }
 
+    a, a.visited {
+        color: black;
+        font-size:30px;
+    }
+    
     #_corexitContent {
         margin: 1%;
     }
@@ -78,16 +83,14 @@
         if (text.length > 0) {
             currentFrame = 0;
 
-            var i = text.replace(". ", ".\n");
-            i = i.replace("? ", "?\n");
-            i = i.replace("! ", "!\n");
+            var i = text.replace(/[\.\?\!]\s+/g, ".\n");
 
             var preframes = i.split("\n");
 
             var l = '';
             frames = [];
-            for (i = 0; i < preframes.length; i++) {
-                l += preframes[i];
+            for (j = 0; j < preframes.length; j++) {
+                l = l + ' ' + preframes[j];
                 if (l.length > minFrameLength) {
                     frames.push( l.trim() );
                     l = '';
@@ -105,11 +108,60 @@
 
             showFrame(currentFrame);
         }
+        else {
+            var content = document.getElementById("_corexitContent");
+            content.innerHTML = "No text selected.";
+        }
     }
 
     chrome.extension.sendRequest({'command' : 'getText'}, corexit);
+
+
+
+    function onMouseWheelSpin(e) {
+        var nDelta = 0;
+        if (!e) { // For IE, access the global (window) event object
+            e = window.event;
+        }
+        // cross-bowser handling of eventdata to boil-down delta (+1 or -1)
+        if ( e.wheelDelta ) { // IE and Opera
+            nDelta= e.wheelDelta;
+            if ( window.opera ) {  // Opera has the values reversed
+                nDelta= -nDelta;
+            }
+        }
+        else if (e.detail) { // Mozilla FireFox
+            nDelta= -e.detail;
+        }
+        if (nDelta > 0) {
+            //HandleMouseSpin( 1, e.clientX, e.clientY );
+            goPrevious();
+        }
+        if (nDelta < 0) {
+            //HandleMouseSpin( -1, e.clientX, e.clientY );
+            goNext();
+        }
+        if ( e.preventDefault ) {  // Mozilla FireFox
+            e.preventDefault();
+        }
+        e.returnValue = false;  // cancel default action
+    }
+
+    function setupSpin() {
+        var content = document.getElementById("_corexitContent");
+
+        if (content.addEventListener) {
+            content.addEventListener('DOMMouseScroll', onMouseWheelSpin, false);
+            content.addEventListener('mousewheel', onMouseWheelSpin, false); // Chrome
+        }
+        else {
+            content.onmousewheel= onMouseWheelSpin;
+        }
+    }
+    
 </script>
 
+<body onload="setupSpin();">
 <table width="100%">
     <tr>
         <td width="33%" align="left" id="_corexitPrev">
@@ -126,8 +178,9 @@
 
 <br/>
 
-<div id="_corexitPanel" style="width: 100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans">
-    <div id="_corexitContent" style="height: 90%; font-size:60px">
+<div id="_corexitPanel" style="width:100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans; overflow: none">
+    <div id="_corexitContent" style="font-size:60px; height: 70%; overflow: none">
     </div>
 </div>
 
+</body>

@@ -1,5 +1,5 @@
 {
-  "name": "corexit",
+  "name": "Corexit",
   "version": "1.0",
   "description": "Text Dispersant",
   "background_page": "background.html",
@@ -14,13 +14,13 @@
    [ 
    {
       "js": [ "beforeLoad.js" ],
-      "matches": [ "http://*/*", "https://*/*", "ftp://*/*" ],
+      "matches": [ "http://*/*", "https://*/*", "ftp://*/*", "file://*/*" ],
       "all_frames": true,
       "run_at": "document_start"
    }, 
    {
       "js": [ "afterLoad.js" ],
-      "matches": [ "http://*/*", "https://*/*", "ftp://*/*" ],
+      "matches": [ "http://*/*", "https://*/*", "ftp://*/*", "file://*/*" ],
       "all_frames": true,
       "run_at": "document_end"
    }

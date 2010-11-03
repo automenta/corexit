@@ -18,13 +18,10 @@ function onMouseUp(event) {
         //unselect
         //selection.collapseToStart();
 
-	if  (selectedText.length != 0) {
+	//if  (selectedText.length != 0) {
             chrome.extension.sendRequest({command : "sendText", text : selectedText});
-	}
-	gClickInTextBox = false;
+	//}
+        
+	//gClickInTextBox = false;
  
 }
-
-// Catch mouse down and up events
-document.addEventListener("mouseup", onMouseUp, false);
-document.addEventListener("mousedown", onMouseDown, false);

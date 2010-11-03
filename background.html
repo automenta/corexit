@@ -2,6 +2,13 @@
 <head>
 <script type="text/javascript">
 
+var mode = 'overlay';
+//var mode = 'newtab';
+//var mode = 'newwindow';
+
+//var newWindowWidthScale = 0.9;
+//var newWindowHeightScale = 0.9;
+
 chrome.extension.onRequest.addListener(function (request, sender, callback) {
 	if (request.command == "sendText") {
 		var theTextArea = document.getElementById("text");
@@ -18,14 +25,37 @@ chrome.extension.onRequest.addListener(function (request, sender, callback) {
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-    //chrome.tabs.executeScript(null, {file:'corexit.js'});
 
-    var index = chrome.tabs.getSelected(null, function(tab) {
-        var index = tab.index+1;
-        chrome.tabs.create({'index': index, 'url': chrome.extension.getURL('corexit.html')}, function(tab) {
-            // Tab opened.
+    var corexiturl = chrome.extension.getURL('corexit.html');
+
+    if (mode === 'overlay') {
+        chrome.tabs.executeScript(null, {file:'corexit.js'});
+    }
+    else if (mode === 'newtab') {
+        var index = chrome.tabs.getSelected(null, function(tab) {
+            var index = tab.index+1;
+            chrome.tabs.create({'index': index, 'url': corexiturl}, function(tab) {
+                // Tab opened.
+            });
         });
-    });
+    }
+    else if (mode === 'newwindow') {
+        chrome.windows.getCurrent(function(win) {
+
+//           var w = (win.width * newWindowWidthScale);
+//           var h = floor(win.height * newWindowHeightScale);
+
+           chrome.windows.create( {
+                'type': "popup",
+                'url': corexiturl
+//                'width': w,
+//                'height': h
+           }, null);
+
+        });
+
+    }
+
 });
 </script>
     
