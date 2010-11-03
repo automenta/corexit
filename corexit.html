@@ -7,7 +7,7 @@
         color: black;
         font-size:30px;
     }
-    
+
     #_corexitContent {
         margin: 1%;
     }
@@ -23,13 +23,13 @@
         color: black;
         -webkit-user-select:none;
     }
-    
+
     #_corexitNext {
         font-size: 30px;
         color: black;
         -webkit-user-select:none;
     }
-    
+
 </style>
 
 <script>
@@ -231,39 +231,52 @@
 
     function showHelp() {
         alert("To close: Right click the top or bottom areas (when the cursor turns to cross-hairs)\n" +
-              "To adjust font size: Mousewheel on bottom 'Abc' or click +/- buttons nearby."
-            );
+            "To adjust font size: Mousewheel on bottom 'Abc' or click +/- buttons nearby."
+    );
     }
+
+    document.onkeydown = function(e){
+        var keycode;
+        if (e == null) { // ie
+            keycode = event.keyCode;
+        } else { // mozilla
+            keycode = e.which;
+        }
+        if(keycode == 27){ // escape, close box, esc
+            window.close();
+        }
+    };
+    
 </script>
 
 <body onload="setup();">
-<table width="100%" id="_corexitControl" onmouseover="this.style.cursor='crosshair';" oncontextmenu="closeWindow(this); return false;">
-    <tr>
-        <td width="33%" align="left" id="_corexitPrev">
+    <table width="100%" id="_corexitControl" onmouseover="this.style.cursor='crosshair';" oncontextmenu="closeWindow(this); return false;">
+        <tr>
+            <td width="33%" align="left" id="_corexitPrev">
 
-        </td>
-        <td width="33%" align="center" id="_corexitStatus">
+            </td>
+            <td width="33%" align="center" id="_corexitStatus">
 
-        </td>
-        <td width="33%" align="right" id="_corexitNext">
+            </td>
+            <td width="33%" align="right" id="_corexitNext">
 
-        </td>
-    </tr>
-</table>
+            </td>
+        </tr>
+    </table>
 
-<div id="_corexitPanel" style="width:100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans; overflow: none">
-    <div id="_corexitContent" style="height: 70%; overflow: none">
+    <div id="_corexitPanel" style="width:100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans; overflow: none">
+        <div id="_corexitContent" style="height: 70%; overflow: none">
+        </div>
     </div>
-</div>
 
-<div id="_corexitBottom" width="100%">
-    <a href="#" onclick="showHelp()">?</a>
+    <div id="_corexitBottom" width="100%">
+        <a href="#" onclick="showHelp()">?</a>
 
-    &nbsp;
+        &nbsp;
 
-    <a href="#" onclick="fontSmaller()">-</a>
-    <span id="_corexitFont">Abc</span>
-    <a href="#" onclick="fontLarger()">+</a>
-</div>
+        <a href="#" onclick="fontSmaller()">-</a>
+        <span id="_corexitFont">Abc</span>
+        <a href="#" onclick="fontLarger()">+</a>
+    </div>
 
 </body>
