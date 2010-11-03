@@ -30,6 +30,17 @@
         -webkit-user-select:none;
     }
 
+    #_corexitPanel {
+        text-align:left;
+        font-family:Arial,Sans;
+        color: white;
+        background-color: black;
+    }
+
+    #_corexitFont {
+        font-size: 25px;
+    }
+}
 </style>
 
 <script>
@@ -40,10 +51,12 @@
     var text;
     var frames;
     var currentFrame;
+    var speechEnabled = false;
 
     function showFrame(f) {
         var content = document.getElementById("_corexitContent");
-        content.innerHTML = frames[f];
+        var line = frames[f];
+        content.innerHTML = line;
 
         var status = document.getElementById("_corexitStatus");
         status.innerHTML = (f+1) + '/' + frames.length;
@@ -64,9 +77,20 @@
             next.innerHTML = '<a href="#" onClick="goNext();">----&gt;</a>';
         }
 
+        if (speechEnabled) {
+            var speech = document.getElementById("_corexitSpeech");
+            var speechLine = line.replace("&nbsp;", " ");
+            var speechLineEncoded = encodeURIComponent(speechLine);
+            var speechURL = 'http://translate.google.com/translate_tts?q=' + speechLineEncoded;
+            speech.innerHTML = '<iframe src="' + speechURL + '" width="200px" height="80px"></iframe>';
+        }
+
     }
 
     function goPrevious() {
+        if (frames.length == 0)
+            return;
+
         currentFrame--;
         if (currentFrame < 0) currentFrame = 0;
 
@@ -74,6 +98,9 @@
     }
 
     function goNext() {
+        if (frames.length == 0)
+            return;
+
         currentFrame++;
         if (currentFrame > frames.length-1)
             currentFrame = frames.length-1;
@@ -130,6 +157,7 @@
         else {
             var content = document.getElementById("_corexitContent");
             content.innerHTML = "No text selected.";
+            frames = [];
         }
     }
 
@@ -194,8 +222,11 @@
 
 
     function closeWindow(event) {
-        if (event.button != 0)
+        if (event.button != 0) {
+            //Try both methods of hiding it
             window.close();
+            document.getElementById('_corexitOverlay').style.display='none';
+        }
     }
 
     function setup() {
@@ -280,12 +311,12 @@
         </tr>
     </table>
 
-    <div id="_corexitPanel" style="width:100%; text-align:left;background-color: gray;color:white;font-family:Arial,Sans; overflow: none">
-        <div id="_corexitContent" style="height: 70%; overflow: none">
+    <div id="_corexitPanel" style="width:100%; overflow: hidden">
+        <div id="_corexitContent" style="height: 80%; overflow: hidden">
         </div>
     </div>
 
-    <div id="_corexitBottom" width="100%">
+    <div id="_corexitBottom" width="100%" style="position:fixed;bottom:5%;">
         <a href="#" onclick="showHelp()">?</a>
 
         &nbsp;
@@ -294,5 +325,9 @@
         <span id="_corexitFont">Abc</span>
         <a href="#" onclick="fontLarger()">+</a>
     </div>
+
+    <div id="_corexitSpeech">
+    </div>
+
 
 </body>

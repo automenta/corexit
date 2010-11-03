@@ -4,7 +4,7 @@
 
 //var mode = 'overlay';
 //var mode = 'newtab';
-var mode = 'newwindow';
+//var mode = 'newwindow';
 
 var popupWidth = 800;
 var popupHeight = 600;
@@ -14,9 +14,16 @@ var popupTop = 100;
 chrome.extension.onRequest.addListener(function (request, sender, callback) {
 	if (request.command == "sendText") {
 		var theTextArea = document.getElementById("text");
-		theTextArea.innerHTML = request.text;
+                var rtext = request.text.trim();
+		theTextArea.innerHTML = rtext;
                 //theTextArea.select();
 		//document.execCommand("Copy");
+
+                if (rtext.length > 0)
+                    chrome.browserAction.setIcon({'path':'dispersed.png'});
+                else
+                    chrome.browserAction.setIcon({'path':'paragraph.png'});
+
         }
 	else if (request.command == "getText") {
 		var theTextArea = document.getElementById("text");
@@ -29,8 +36,10 @@ chrome.extension.onRequest.addListener(function (request, sender, callback) {
 function corexit() {
     var corexiturl = chrome.extension.getURL('corexit.html');
 
+    var mode = localStorage["mode"];
+    
     if (mode === 'overlay') {
-        chrome.tabs.executeScript(null, {file:'corexit.js'});
+        chrome.tabs.executeScript(null, {file:'corexitOverlay.js'});
     }
     else if (mode === 'newtab') {
         var index = chrome.tabs.getSelected(null, function(tab) {
@@ -62,22 +71,16 @@ function corexit() {
 }
 
 
-
 chrome.browserAction.onClicked.addListener(function(tab) {
     corexit();
 });
 
-//chrome.contextMenus.create({
-//    type: 'separator'
-//}, null);
 chrome.contextMenus.create({
     //'type': 'normal',
     'title': 'Corexit',
     'contexts': ['selection'],
     'onclick': corexit
 }, null);
-//
-//alert(chrome.extension.lastError);
 
 </script>
     

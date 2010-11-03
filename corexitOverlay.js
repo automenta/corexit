@@ -9,7 +9,7 @@ function corexit(response) {
 
         var src = chrome.extension.getURL('corexit.html');
         
-        content.innerHTML = '<iframe frameborder="0" marginwidth="2" marginheight="2" scrolling="auto" align="middle" width="100%" height="100%" src="' + src +'"></iframe>';
+        content.innerHTML = '<iframe frameborder="0" marginwidth="2" marginheight="2" scrolling="auto" align="middle" width="100%" height="90%" src="' + src +'"></iframe>';
         panel.style.display = '';    // set visible
     }
 }

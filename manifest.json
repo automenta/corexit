@@ -1,11 +1,12 @@
 {
-  "name": "Corexit",
+  "name": "Corexit Text Dispersant",
   "version": "1.0",
   "description": "Text Dispersant",
+  "icons": { "128": "dispersant.jpg" },
   "background_page": "background.html",
   "browser_action": {
-    "default_icon": "logo.jpg",
-    "default_title": "Corexit"
+    "default_icon": "paragraph.png",
+    "default_title": "Corexit Text Dispersant"
   },
  "options_page": "options.html",
  "permissions": [
@@ -23,7 +24,7 @@
       "js": [ "afterLoad.js" ],
       "matches": [ "http://*/*", "https://*/*", "ftp://*/*", "file://*/*" ],
       "all_frames": true,
-      "run_at": "document_end"
+      "run_at": "document_idle"
    }
    ]
 

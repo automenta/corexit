@@ -1,6 +1,6 @@
 // Beginning of the selection.
 // That's our way of checking if selecting inside a text box.
-function onMouseDown(event) {
+function _corexitOnMouseDown(event) {
 	// Update the options. Need to do it here, because in mouse up it's too late
 	//chrome.extension.sendRequest({command : "getOptions"}, getOptions);
 	// Mark if the source click is inside a text box
@@ -11,7 +11,7 @@ function onMouseDown(event) {
 }
 
 // End of the selection
-function onMouseUp(event) {
+function _corexitOnMouseUp(event) {
 	var selection = window.getSelection();
 	var selectedText = selection ? selection.toString() : "";
 
@@ -25,3 +25,4 @@ function onMouseUp(event) {
 	//gClickInTextBox = false;
  
 }
+
