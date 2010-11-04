@@ -49,7 +49,7 @@ function corexit() {
             });
         });
     }
-    else if (mode === 'newwindow') {
+    else /*if (mode === 'newwindow')*/ {
         chrome.windows.getCurrent(function(win) {
 
 //           var w = (win.width * newWindowWidthScale);

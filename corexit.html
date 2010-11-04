@@ -3,6 +3,14 @@
         margin: 1%;
     }
 
+    .smallLabel {
+        font-size: 16px;
+    }
+
+    #_corexitFont {
+        font-size: 45px;
+    }
+    
     #_corexitContent {
         margin: 3%;
     }
@@ -12,6 +20,7 @@
 
     #_corexitStatus {
         font-size: 30px;
+        font-family: Arial, Sans;
         color: black;
         -webkit-user-select:none;
     }
@@ -19,25 +28,21 @@
     #_corexitPrev {
         font-size: 30px;
         color: black;
+        font-family: Arial, Sans;
         -webkit-user-select:none;
     }
 
     #_corexitNext {
         font-size: 30px;
         color: black;
+        font-family: Arial, Sans;
         -webkit-user-select:none;
     }
 
-    #_corexitPanel {
-        text-align:left;
-        font-family:Arial,Sans;
-        color: white;
-        background-color: black;
-        width:100%;
-        height: 85%;
-        overflow: hidden;
-    }
 
+    #_corexitSpeech {
+        position: absolute; left: 1%; bottom: 1%; width: 150px; height: 40px; overflow: hidden;
+    }
 
     #_corexitHelpClose {
         font-size: 12px;
@@ -60,18 +65,29 @@
     a, a.visited {
         color: black;
         font-size:30px;
+        font-family: Arial, Sans;
+    }
+
+    #_corexitPanel {
+        text-align:left;
+        font-family:Arial,Sans;
+        color: white;
+        background-color: black;
+        width:100%;
+        height: 85%;
+        overflow: auto;
     }
 
     #_corexitBottom {
         color: black;
         font-size:30px;
-
-        position:fixed;
-        left: 1%;
-        bottom:1%;
-        width: 90%;
+        font-family: Arial, Sans;
+        text-align: center;
+        height: 8%;
     }
-
+    #_corexitControl {
+        font-family: Arial, Sans;
+    }
 }
 </style>
 <script type="text/javascript" src="yboss-lib.js"></script>
@@ -247,12 +263,12 @@
     
     function onFontSpinOver(e) {
         var font = document.getElementById("_corexitFont");
-        font.style.backgroundColor = "#ddd";
+        font.style.backgroundColor = "#ddf";
     }
 
     function onFontSpinOut(e) {
         var font = document.getElementById("_corexitFont");
-        font.style.backgroundColor = "white";
+        font.style.backgroundColor = "";
     }
 
     //TODO find a way to combine with previous function
@@ -310,12 +326,13 @@
 //    }
 //
     function closeWindow(event) {
-        if (event.button != 0) {
             //Try both methods of hiding it
 //            storeWindowPosition();
             window.close();
-            document.getElementById('_corexitOverlay').style.display='none';
-        }
+            
+            var overlay = document.getElementById('_corexitOverlay');
+            if (overlay!=undefined)
+                style.display='none';
     }
 
 
@@ -325,12 +342,12 @@
         var content = document.getElementById("_corexitContent");
         var font = document.getElementById("_corexitFont");
 
-        if (panel.addEventListener) {
-            panel.addEventListener('DOMMouseScroll', onContentSpin, false);
-            panel.addEventListener('mousewheel', onContentSpin, false); // Chrome
+        if (content.addEventListener) {
+            content.addEventListener('DOMMouseScroll', onContentSpin, false);
+            content.addEventListener('mousewheel', onContentSpin, false); // Chrome
         }
         else {
-            panel.onmousewheel= onpanelSpin;
+            content.onmousewheel= onpanelSpin;
         }
 
         if (font.addEventListener) {
@@ -345,7 +362,7 @@
 
         content.style.fontSize = fontSize + "px";
 
-        control.onclick = closeWindow;
+        control.ondblclick = closeWindow;
         
         if (localStorage["hideHelp"] == 1) {
             hideHelp();
@@ -374,12 +391,23 @@
         images.innerHTML = '';
     }
 
-    function updateImages(line) {
+    function enlargeImage(element, imagesrc) {
+        element.innerHTML = '<img src=\"' + imagesrc + '\"/>';
+    }
+
+    function addImagesForSelection() {
         //http://icant.co.uk/sandbox/yboss/
 
         //TODO filter 'q' for useless prepositions like 'the', 'and', etc
+        var selection = window.getSelection();
 
-        YBOSS.config.imageItemHTML = '<a href="{url}">' +
+        var line = '' + selection;
+        if (line.length == 0) {
+            alert("Select some text to add images.");
+            return;
+        }
+
+        YBOSS.config.imageItemHTML = '<a href="#" onclick="enlargeImage(this, \'{url}\');">' +
                                         '<img src="{thumbnail}" ' +
                                         'width="{thumbnailwidth}"' +
                                         'height="{thumbnailheight}">' +
@@ -388,7 +416,7 @@
         var q = line;
         var images = document.getElementById("_corexitImages");
         
-        images.innerHTML = '<b>Updating images...</b><br/><pre>' + q + '</pre>';
+        //images.innerHTML = '<b>Updating images...</b><br/><pre>' + q + '</pre>';
 
         YBOSS.get(
          {
@@ -397,10 +425,10 @@
            query: q,
            count:10,
            callback: function(o) {
-               images.innerHTML = o.imagesHTML;
+               images.innerHTML += o.imagesHTML;
            },
            fail: function() {
-               images.innerHTML = 'No images available.';
+//               //images.innerHTML = 'No images available.';
            }
          }
         );
@@ -431,6 +459,17 @@
         localStorage["hideHelp"] = 0;
     }
 
+    function onControlMouseOver() {
+        var control = document.getElementById("_corexitControl");
+        control.style.backgroundColor = "#ddffdd";
+        control.style.cursor='crosshair';
+
+    }
+    function onControlMouseOut() {
+        var control = document.getElementById("_corexitControl");
+        control.style.backgroundColor = '';
+    }
+
     //Setup escape-key events
     document.onkeydown = function(e){
         var keycode;
@@ -440,7 +479,7 @@
             keycode = e.which;
         }
         if(keycode == 27){ // escape, close box, esc
-            window.close();
+            closeWindow();
         }
         else if (keycode == 37) {
             //left
@@ -460,10 +499,19 @@
         }
     };
 
+
 </script>
 
 <body onload="setup();">
-    <table width="100%" id="_corexitControl" onmouseover="this.style.cursor='crosshair';" oncontextmenu="closeWindow(this); return false;">
+
+    <div id="_corexitPanel">
+        <div id="_corexitContent" onmouseover="this.style.border='1 px solid red';" onmouseout="this.style.border='0 px solid';">
+        </div>
+        <div id="_corexitImages">
+        </div>
+    </div>
+
+    <table width="100%" id="_corexitControl" onmouseout="onControlMouseOut();" onmouseover="onControlMouseOver();" oncontextmenu="closeWindow(this); return false;">
         <tr>
             <td width="33%" align="left" id="_corexitPrev">
 
@@ -477,42 +525,37 @@
         </tr>
     </table>
 
-    <div id="_corexitPanel">
-        <div id="_corexitContent" style="overflow: hidden">
-        </div>
-        <div id="_corexitImages" style="overflow: hidden">
-        </div>
-    </div>
-
     <div id="_corexitBottom">
         <a href="#" onclick="fontSmaller()">[-]</a>
         <span id="_corexitFont">&nbsp; Abc &nbsp;</span>
         <a href="#" onclick="fontLarger()">[+]</a>
-        
-        <a href="#" onclick="toggleSpeech()">[Speak]</a>
 
-        <a href="#" onclick="updateImages(frames[currentFrame]);">
-                [Images]
+        <br/>
+        
+        <a href="#" class="smallLabel" onclick="toggleSpeech()">
+            [Speak]
+        </a>
+        <a href="#" class="smallLabel" onclick="addImagesForSelection();">
+            [Images]
+        <a href="#" class="smallLabel" onclick="alert('Not implemented yet: Provides a way to edit the frame, then tweets it.');">
+            [Tweet...]
+        </a>
+        <a href="#" class="smallLabel" onclick="toggleHelp()">
+            [?]
         </a>
 
-        <a href="#" onclick="alert('Not implemented yet: Provides a way to edit the frame, then tweets it.');">
-                [Tweet...]
-        </a>
-        <a href="#" onclick="toggleHelp()">[?]</a>
-        
-        <span id="_corexitSpeech" style="float: right; width: 150px; height: 40px; overflow: hidden;">
-        </span>
 
     </div>
     
+    <span id="_corexitSpeech">
+    </span>
+    
     <div id="_corexitHelp">
         <h1>Controls</h1>
-        <b>To navigate:</b> Mousewheel on center area, or hit left/right<br/>
+        <b>To navigate:</b> Mousewheel on displayed text, or hit left/right<br/>
         <b>To close:</b> Right click the top area, or hit escape<br/>
         <b>To adjust font size:</b> Mousewheel on bottom 'Abc' or click +/- buttons nearby.<br/>
         <a href='#' onclick='hideHelp()' id='_corexitHelpClose'><b>[Hide]</b></a>
     </div>
-
-
 
 </body>
