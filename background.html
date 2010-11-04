@@ -6,8 +6,8 @@
 //var mode = 'newtab';
 //var mode = 'newwindow';
 
-var popupWidth = 800;
-var popupHeight = 600;
+var popupWidth = 1200;
+var popupHeight = 800;
 var popupLeft = 100;
 var popupTop = 100;
 
@@ -55,14 +55,37 @@ function corexit() {
 //           var w = (win.width * newWindowWidthScale);
 //           var h = floor(win.height * newWindowHeightScale);
 
+           var width, height, top, left;
+           var l = localStorage["windowDimensions"];
+
+           width = popupWidth;
+           height = popupHeight;
+           left = win.left + popupLeft;
+           top = win.top + popupTop;
+
+           if (l!=undefined) {
+               if (l.length == 4) {
+                   left = l[0];
+                   top = l[1];
+                   width = l[2];
+                   height = l[3];
+               }
+           }
+
            chrome.windows.create( {
                 'type': "popup",
                 'url': corexiturl,
-                'width': popupWidth,
-                'height': popupHeight,
-                'left': win.left + popupLeft,
-                'top': win.top + popupTop
-           }, null);
+                'left': left,
+                'top': top,
+                'width': width,
+                'height': height
+
+//                'width': popupWidth,
+//                'height': popupHeight,
+//                'left': win.left + popupLeft,
+//                'top': win.top + popupTop
+           }, function(w) {
+           });
 
         });
 
@@ -81,6 +104,7 @@ chrome.contextMenus.create({
     'contexts': ['selection'],
     'onclick': corexit
 }, null);
+
 
 </script>
     

@@ -3,11 +3,6 @@
         margin: 1%;
     }
 
-    a, a.visited {
-        color: black;
-        font-size:30px;
-    }
-
     #_corexitContent {
         margin: 1%;
     }
@@ -37,9 +32,42 @@
         background-color: black;
     }
 
+
     #_corexitFont {
         font-size: 25px;
     }
+
+    
+    
+    #_corexitHelpClose {
+        font-size: 12px;
+    }
+
+    a, a.visited {
+        color: black;
+        font-size:30px;
+    }
+
+    #_corexitHelp {
+        font-size: 12px;
+        position:fixed;
+        right: 3%;
+        bottom: 1%;
+    }
+
+    #_corexitQuestion {
+        font-size: 12px;
+        position:fixed;
+        right: 3%;
+        bottom: 1%;
+    }
+
+    #_corexitBottom {
+        position:fixed;
+        left: 5%;
+        bottom:1%;
+    }
+
 }
 </style>
 
@@ -220,14 +248,39 @@
         e.returnValue = false;  // cancel default action
     }
 
+//    var skipNextSizeStore = true;
 
+//    function restoreWindowPosition() {
+//        chrome.windows.getCurrent(function(w) {
+//            var l = localStorage["windowDimensions"];
+//            alert('restore: ' + l);
+//            if (l != undefined) {
+//                w.moveTo(l[0], l[1]);
+////                w.left = l[0];
+////                w.top = l[1];
+//                w.width = l[2];
+//                w.height = l[3];
+//            }
+//            skipNextSizeStore = true;
+//        });
+//    }
+    
+//    function storeWindowPosition() {
+//        chrome.windows.getCurrent(function(w) {
+//            localStorage["windowDimensions"] = [ w.left, w.top, w.width, w.height ];
+//            alert('store: ' + localStorage["windowDimensions"]);
+//        });
+//    }
+//
     function closeWindow(event) {
         if (event.button != 0) {
             //Try both methods of hiding it
+//            storeWindowPosition();
             window.close();
             document.getElementById('_corexitOverlay').style.display='none';
         }
     }
+
 
     function setup() {
         var panel = document.getElementById("_corexitPanel");
@@ -254,13 +307,43 @@
         content.style.fontSize = fontSize + "px";
 
         control.onclick = closeWindow;
+        
+        if (localStorage["hideHelp"] == 1) {
+            hideHelp();
+        }
+        else {
+            showHelp();
+        }
+
+//        window.onresize = function() {
+//            if (!skipNextSizeStore) {
+//                storeWindowPosition();
+//            }
+//            else {
+//                skipNextSizeStore = false;
+//            }
+//        };
+
+        //storeWindowPosition();
+
+        chrome.extension.sendRequest({'command' : 'getText'}, corexit);
 
     }
 
+    function hideHelp() {
+        var help = document.getElementById("_corexitHelp");
+        var question = document.getElementById("_corexitQuestion");
+        help.style.display = 'none';
+        question.style.display = '';
+        localStorage["hideHelp"] = 1;
+    }
+    
     function showHelp() {
-        alert("To close: Right click the top or bottom areas (when the cursor turns to cross-hairs)\n" +
-            "To adjust font size: Mousewheel on bottom 'Abc' or click +/- buttons nearby."
-        );
+        var help = document.getElementById("_corexitHelp");
+        var question = document.getElementById("_corexitQuestion");
+        help.style.display = '';
+        question.style.display = 'none';
+        localStorage["hideHelp"] = 0;
     }
 
     //Setup escape-key events
@@ -292,8 +375,6 @@
         }
     };
 
-    chrome.extension.sendRequest({'command' : 'getText'}, corexit);
-
 </script>
 
 <body onload="setup();">
@@ -316,14 +397,19 @@
         </div>
     </div>
 
-    <div id="_corexitBottom" width="100%" style="position:fixed;bottom:5%;">
-        <a href="#" onclick="showHelp()">?</a>
-
-        &nbsp;
-
+    <div id="_corexitBottom">
         <a href="#" onclick="fontSmaller()">-</a>
         <span id="_corexitFont">Abc</span>
         <a href="#" onclick="fontLarger()">+</a>
+    </div>
+
+    <div id="_corexitQuestion">
+        <a href="#" onclick="showHelp()">?</a>
+    </div>
+    <div id="_corexitHelp">
+        <b>To close:</b> Right click the top or bottom areas (when the cursor turns to cross-hairs)<br/>
+        <b>To adjust font size:</b> Mousewheel on bottom 'Abc' or click +/- buttons nearby.<br/>
+        <a href='#' onclick='hideHelp()' id='_corexitHelpClose'>[Hide]</a>
     </div>
 
     <div id="_corexitSpeech">
