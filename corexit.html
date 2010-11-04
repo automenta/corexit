@@ -33,20 +33,10 @@
     }
 
 
-    #_corexitFont {
-        font-size: 25px;
-    }
-
-    
-    
     #_corexitHelpClose {
         font-size: 12px;
     }
 
-    a, a.visited {
-        color: black;
-        font-size:30px;
-    }
 
     #_corexitHelp {
         font-size: 12px;
@@ -62,7 +52,15 @@
         bottom: 1%;
     }
 
+    a, a.visited {
+        color: black;
+        font-size:30px;
+    }
+
     #_corexitBottom {
+        color: black;
+        font-size:30px;
+
         position:fixed;
         left: 5%;
         bottom:1%;
@@ -225,11 +223,11 @@
         else if (e.detail) { // Mozilla FireFox
             nDelta= -e.detail;
         }
-        if (nDelta < 0) {
+        if (nDelta > 0) {
             //HandleMouseSpin( 1, e.clientX, e.clientY );
             goPrevious();
         }
-        if (nDelta > 0) {
+        if (nDelta < 0) {
             //HandleMouseSpin( -1, e.clientX, e.clientY );
             goNext();
         }
@@ -237,6 +235,16 @@
             e.preventDefault();
         }
         e.returnValue = false;  // cancel default action
+    }
+    
+    function onFontSpinOver(e) {
+        var font = document.getElementById("_corexitFont");
+        font.style.backgroundColor = "#ddd";
+    }
+
+    function onFontSpinOut(e) {
+        var font = document.getElementById("_corexitFont");
+        font.style.backgroundColor = "white";
     }
 
     //TODO find a way to combine with previous function
@@ -309,17 +317,19 @@
         var content = document.getElementById("_corexitContent");
         var font = document.getElementById("_corexitFont");
 
-        if (content.addEventListener) {
-            content.addEventListener('DOMMouseScroll', onContentSpin, false);
-            content.addEventListener('mousewheel', onContentSpin, false); // Chrome
+        if (panel.addEventListener) {
+            panel.addEventListener('DOMMouseScroll', onContentSpin, false);
+            panel.addEventListener('mousewheel', onContentSpin, false); // Chrome
         }
         else {
-            content.onmousewheel= onContentSpin;
+            panel.onmousewheel= onpanelSpin;
         }
 
         if (font.addEventListener) {
             font.addEventListener('DOMMouseScroll', onFontSpin, false);
             font.addEventListener('mousewheel', onFontSpin, false); // Chrome
+            font.addEventListener('mouseover', onFontSpinOver, false); // Chrome
+            font.addEventListener('mouseout', onFontSpinOut, false); // Chrome
         }
         else {
             font.onmousewheel= onFontSpin;
@@ -413,22 +423,24 @@
         </tr>
     </table>
 
-    <div id="_corexitPanel" style="width:100%; overflow: hidden">
-        <div id="_corexitContent" style="height: 80%; overflow: hidden">
+    <div id="_corexitPanel" style="width:100%; height: 85%; overflow: hidden">
+        <div id="_corexitContent" style="overflow: hidden">
         </div>
     </div>
 
     <div id="_corexitBottom">
-        <a href="#" onclick="fontSmaller()">-</a>
-        <span id="_corexitFont">Abc</span>
-        <a href="#" onclick="fontLarger()">+</a>
+        <a href="#" onclick="fontSmaller()">[-]</a>
+        <span id="_corexitFont">&nbsp; Abc &nbsp;</span>
+        <a href="#" onclick="fontLarger()">[+]</a>
         
-        &nbsp;
-        &nbsp;
+        <a href="#" onclick="toggleSpeech()">[Speak]</a>
 
-        <a href="#" onclick="toggleSpeech()">Speak</a>
-        &nbsp;
-        &nbsp;
+        <a href="#" onclick="alert('Not implemented yet: Provides a way to edit the frame, then tweets it.');">
+                [Tweet...]
+        </a>
+        <a href="#" onclick="alert('Not implemented yet: Toggles display of images from image searches');">
+                [Images]
+        </a>
         
         <div id="_corexitSpeech" style="float: right">
         </div>
