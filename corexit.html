@@ -4,7 +4,7 @@
     }
 
     #_corexitContent {
-        margin: 1%;
+        margin: 3%;
     }
 
     #_corexitStatus {
@@ -30,6 +30,9 @@
         font-family:Arial,Sans;
         color: white;
         background-color: black;
+        width:100%;
+        height: 85%;
+        overflow: hidden;
     }
 
 
@@ -39,17 +42,16 @@
 
 
     #_corexitHelp {
-        font-size: 12px;
-        position:fixed;
-        right: 3%;
-        bottom: 1%;
-    }
-
-    #_corexitQuestion {
-        font-size: 12px;
-        position:fixed;
-        right: 3%;
-        bottom: 1%;
+        position:absolute;
+        width: 50%;
+        height: 25%;
+        left: 25%;
+        top: 25%;
+        background-color: white;
+        border: 2px solid gray;
+        color: black;
+        font-size: 18px;
+        padding: 5px;
     }
 
     a, a.visited {
@@ -62,9 +64,9 @@
         font-size:30px;
 
         position:fixed;
-        left: 5%;
+        left: 1%;
         bottom:1%;
-        width: 50%;
+        width: 90%;
     }
 
 }
@@ -361,19 +363,28 @@
 
     }
 
+    var helpShowing = false;
+
+    function toggleHelp() {
+        if (helpShowing) {
+            hideHelp();
+        }
+        else {
+            showHelp();
+        }
+    }
+
     function hideHelp() {
+        helpShowing = false;
         var help = document.getElementById("_corexitHelp");
-        var question = document.getElementById("_corexitQuestion");
         help.style.display = 'none';
-        question.style.display = '';
         localStorage["hideHelp"] = 1;
     }
     
     function showHelp() {
+        helpShowing = true;
         var help = document.getElementById("_corexitHelp");
-        var question = document.getElementById("_corexitQuestion");
         help.style.display = '';
-        question.style.display = 'none';
         localStorage["hideHelp"] = 0;
     }
 
@@ -423,7 +434,7 @@
         </tr>
     </table>
 
-    <div id="_corexitPanel" style="width:100%; height: 85%; overflow: hidden">
+    <div id="_corexitPanel">
         <div id="_corexitContent" style="overflow: hidden">
         </div>
     </div>
@@ -435,31 +446,26 @@
         
         <a href="#" onclick="toggleSpeech()">[Speak]</a>
 
-        <a href="#" onclick="alert('Not implemented yet: Provides a way to edit the frame, then tweets it.');">
-                [Tweet...]
-        </a>
         <a href="#" onclick="alert('Not implemented yet: Toggles display of images from image searches');">
                 [Images]
         </a>
+
+        <a href="#" onclick="alert('Not implemented yet: Provides a way to edit the frame, then tweets it.');">
+                [Tweet...]
+        </a>
+        <a href="#" onclick="toggleHelp()">[?]</a>
         
-        <div id="_corexitSpeech" style="float: right">
-        </div>
+        <span id="_corexitSpeech" style="float: right; width: 150px; height: 40px; overflow: hidden;">
+        </span>
 
     </div>
     
-
-    <div id="_corexitQuestion">
-        <a href="#" onclick="showHelp()">?</a>
-
-    </div>
-
-
-
     <div id="_corexitHelp">
+        <h1>Controls</h1>
         <b>To navigate:</b> Mousewheel on center area, or hit left/right<br/>
         <b>To close:</b> Right click the top area, or hit escape<br/>
         <b>To adjust font size:</b> Mousewheel on bottom 'Abc' or click +/- buttons nearby.<br/>
-        <a href='#' onclick='hideHelp()' id='_corexitHelpClose'>[Hide]</a>
+        <a href='#' onclick='hideHelp()' id='_corexitHelpClose'><b>[Hide]</b></a>
     </div>
 
 
