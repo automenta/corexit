@@ -66,6 +66,7 @@
         position:fixed;
         left: 5%;
         bottom:1%;
+        width: 50%;
     }
 
 }
@@ -81,7 +82,34 @@
     var currentFrame;
     var speechEnabled = false;
 
+    function enableSpeech(line) {
+        speechEnabled = true;
+
+        var speech = document.getElementById("_corexitSpeech");
+        var speechLine = line.replace("&nbsp;", " ");
+        var speechLineEncoded = encodeURIComponent(speechLine);
+        var speechURL = 'http://translate.google.com/translate_tts?q=' + speechLineEncoded;
+        speech.innerHTML = '<iframe src="' + speechURL + '" width="200px" height="80px"></iframe>';
+    }
+    
+    function disableSpeech() {
+        speechEnabled = false;
+        var speech = document.getElementById("_corexitSpeech");
+        speech.innerHTML = '';
+    }
+
+    function toggleSpeech() {
+        if (speechEnabled == true) {
+            disableSpeech();
+        }
+        else {
+            enableSpeech(frames[currentFrame]);
+        }
+    }
+
     function showFrame(f) {
+        disableSpeech();
+        
         var content = document.getElementById("_corexitContent");
         var line = frames[f];
         content.innerHTML = line;
@@ -105,13 +133,6 @@
             next.innerHTML = '<a href="#" onClick="goNext();">----&gt;</a>';
         }
 
-        if (speechEnabled) {
-            var speech = document.getElementById("_corexitSpeech");
-            var speechLine = line.replace("&nbsp;", " ");
-            var speechLineEncoded = encodeURIComponent(speechLine);
-            var speechURL = 'http://translate.google.com/translate_tts?q=' + speechLineEncoded;
-            speech.innerHTML = '<iframe src="' + speechURL + '" width="200px" height="80px"></iframe>';
-        }
 
     }
 
@@ -204,11 +225,11 @@
         else if (e.detail) { // Mozilla FireFox
             nDelta= -e.detail;
         }
-        if (nDelta > 0) {
+        if (nDelta < 0) {
             //HandleMouseSpin( 1, e.clientX, e.clientY );
             goPrevious();
         }
-        if (nDelta < 0) {
+        if (nDelta > 0) {
             //HandleMouseSpin( -1, e.clientX, e.clientY );
             goNext();
         }
@@ -401,19 +422,34 @@
         <a href="#" onclick="fontSmaller()">-</a>
         <span id="_corexitFont">Abc</span>
         <a href="#" onclick="fontLarger()">+</a>
+        
+        &nbsp;
+        &nbsp;
+
+        <a href="#" onclick="toggleSpeech()">Speak</a>
+        &nbsp;
+        &nbsp;
+        
+        <div id="_corexitSpeech" style="float: right">
+        </div>
+
     </div>
+    
 
     <div id="_corexitQuestion">
         <a href="#" onclick="showHelp()">?</a>
+
     </div>
+
+
+
     <div id="_corexitHelp">
-        <b>To close:</b> Right click the top or bottom areas (when the cursor turns to cross-hairs)<br/>
+        <b>To navigate:</b> Mousewheel on center area, or hit left/right<br/>
+        <b>To close:</b> Right click the top area, or hit escape<br/>
         <b>To adjust font size:</b> Mousewheel on bottom 'Abc' or click +/- buttons nearby.<br/>
         <a href='#' onclick='hideHelp()' id='_corexitHelpClose'>[Hide]</a>
     </div>
 
-    <div id="_corexitSpeech">
-    </div>
 
 
 </body>
