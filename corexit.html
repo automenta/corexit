@@ -374,9 +374,6 @@
 
         //setup theme
         var currentTheme = localStorage['theme'];
-        if (currentTheme == undefined) {
-            currentTheme = defaultTheme;
-        }
         setTheme(currentTheme);
 
         //setup help
@@ -489,15 +486,21 @@
     function setTheme(theme) {       
         currentTheme = theme;
         var t = document.getElementById("themeSelect");
+        var found = false;
         for (var x = 0; x < t.options.length; x++) {
             if (t.options[x].value == theme) {
                 t.selectedIndex = x;
+                found = true;
                 break;
             }
+        }
+        if (!found) {
+            theme = currentTheme = defaultTheme;
         }
 
         var c = document.getElementById("themeCSS");
         c.href = 'themes/' + theme + '.css';
+        localStorage['theme'] = theme;
     }
 
     function onThemeChanged() {
