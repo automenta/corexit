@@ -85,17 +85,20 @@
         text-align: center;
         height: 8%;
     }
+
     #_corexitControl {
         font-family: Arial, Sans;
     }
+
 }
 </style>
 <script type="text/javascript" src="yboss-lib.js"></script>
-
+<link id="themeCSS" rel="stylesheet" type="text/css"  />
 <script>
     YBOSS.appId = 'u9Mq95bV34HGuu4H5vdU1gBax96supTNuvCvqrSisdoGHy4TW21foDbILY0CFzs-';
     //For application entrypoint -> http://github.com/automenta/corexit
 
+    var defaultTheme = 'default-black';
     var minFrameLength = 8;
 
     var fontSize = 60;
@@ -145,7 +148,7 @@
             prev.innerHTML = '&nbsp;';
         }
         else {
-            prev.innerHTML = '<a href="#" onClick="goPrevious();">&lt;----</a>';
+            prev.innerHTML = '<button onClick="goPrevious();">&lt;----</button>';
         }
 
         var next = document.getElementById("_corexitNext");
@@ -153,7 +156,7 @@
             next.innerHTML = '&nbsp;';
         }
         else {
-            next.innerHTML = '<a href="#" onClick="goNext();">----&gt;</a>';
+            next.innerHTML = '<button onClick="goNext();">----&gt;</button>';
         }
 
     }
@@ -200,6 +203,11 @@
             currentFrame = 0;
 
             var i = text.replace(/[\.\?\!]\s+/g, ".\n");
+            /*
+             * additional filters:
+             *  dr., mr., mrs., ms.
+             *
+             */
 
             var preframes = i.split("\n");
 
@@ -363,7 +371,15 @@
         content.style.fontSize = fontSize + "px";
 
         control.ondblclick = closeWindow;
-        
+
+        //setup theme
+        var currentTheme = localStorage['theme'];
+        if (currentTheme == undefined) {
+            currentTheme = defaultTheme;
+        }
+        setTheme(currentTheme);
+
+        //setup help
         if (localStorage["hideHelp"] == 1) {
             hideHelp();
         }
@@ -470,6 +486,27 @@
         control.style.backgroundColor = '';
     }
 
+    function setTheme(theme) {       
+        currentTheme = theme;
+        var t = document.getElementById("themeSelect");
+        for (var x = 0; x < t.options.length; x++) {
+            if (t.options[x].value == theme) {
+                t.selectedIndex = x;
+                break;
+            }
+        }
+
+        var c = document.getElementById("themeCSS");
+        c.href = 'themes/' + theme + '.css';
+    }
+
+    function onThemeChanged() {
+        var t = document.getElementById("themeSelect");
+        var i = t.selectedIndex;
+        var theme = t.options[i].value;
+        setTheme(theme);
+    }
+
     //Setup escape-key events
     document.onkeydown = function(e){
         var keycode;
@@ -505,7 +542,7 @@
 <body onload="setup();">
 
     <div id="_corexitPanel">
-        <div id="_corexitContent" onmouseover="this.style.border='1 px solid red';" onmouseout="this.style.border='0 px solid';">
+        <div id="_corexitContent" onMouseOver="this.className='corexitContentHighlighted'; " onMouseOut="this.className='';">
         </div>
         <div id="_corexitImages">
         </div>
@@ -526,24 +563,29 @@
     </table>
 
     <div id="_corexitBottom">
-        <a href="#" onclick="fontSmaller()">[-]</a>
+        <button onclick="fontSmaller()">[-]</button>
         <span id="_corexitFont">&nbsp; Abc &nbsp;</span>
-        <a href="#" onclick="fontLarger()">[+]</a>
+        <button onclick="fontLarger()">[+]</button>
 
         <br/>
-        
-        <a href="#" class="smallLabel" onclick="toggleSpeech()">
-            [Speak]
-        </a>
-        <a href="#" class="smallLabel" onclick="addImagesForSelection();">
-            [Images]
-        <a href="#" class="smallLabel" onclick="alert('Not implemented yet: Provides a way to edit the frame, then tweets it.');">
-            [Tweet...]
-        </a>
-        <a href="#" class="smallLabel" onclick="toggleHelp()">
-            [?]
-        </a>
 
+        <select id="themeSelect" onchange="onThemeChanged();">
+          <option value="default-white">Black on White</option>
+          <option value="default-black">White on Black</option>
+        </select>
+
+        <button class="smallLabel" onclick="toggleSpeech()">
+            [Speak]
+        </button>
+        <button class="smallLabel" onclick="addImagesForSelection();">
+            [Images]
+        </button>
+        <button class="smallLabel" onclick="alert('Not implemented yet: Provides a way to edit the shown text, then tweet it.');">
+            [Tweet...]
+        </button>
+        <button class="smallLabel" onclick="toggleHelp()">
+            [?]
+        </button>
 
     </div>
     
