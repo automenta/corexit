@@ -71,14 +71,18 @@ function corexit() {
                    height = l[3];
                }
            }
+           
+//           width = parseInt(0.7 * window.innerWidth);
+//           height = parseInt(0.7 * window.innerHeight);
 
+           
            chrome.windows.create( {
                 'type': "popup",
-                'url': corexiturl,
-                'left': left,
-                'top': top,
-                'width': width,
-                'height': height
+                'url': corexiturl
+                //'left': left,
+                //'top': top,
+                //'width': width,
+                //'height': height
 
 //                'width': popupWidth,
 //                'height': popupHeight,
