@@ -7,9 +7,6 @@
         font-size: 16px;
     }
 
-    #_corexitFont {
-        font-size: 45px;
-    }
     
     #_corexitContent {
         margin: 3%;
@@ -23,6 +20,11 @@
         font-family: Arial, Sans;
         color: black;
         -webkit-user-select:none;
+    }
+    #_corexitFont {
+        font-size: 30px;
+        font-family: Arial, Sans;
+        color: black;
     }
 
     #_corexitPrev {
@@ -45,15 +47,15 @@
     }
 
     #_corexitHelpClose {
-        font-size: 12px;
+        font-size: 18px;
     }
 
 
     #_corexitHelp {
         position:absolute;
-        width: 50%;
-        height: 25%;
-        left: 25%;
+        width: 70%;
+        height: 50%;
+        left: 15%;
         top: 25%;
         background-color: white;
         border: 2px solid gray;
@@ -74,7 +76,7 @@
         color: white;
         background-color: black;
         width:100%;
-        height: 85%;
+        height: 89%;
         overflow: auto;
     }
 
@@ -83,7 +85,6 @@
         font-size:30px;
         font-family: Arial, Sans;
         text-align: center;
-        height: 8%;
     }
 
     #_corexitControl {
@@ -106,6 +107,7 @@
     var frames;
     var currentFrame;
     var speechEnabled = false;
+    var contentScrollable = true;
 
     function enableSpeech(line) {
         speechEnabled = true;
@@ -158,6 +160,8 @@
         else {
             next.innerHTML = '<button onClick="goNext();">----&gt;</button>';
         }
+        
+        contentScrollable = true;
 
     }
 
@@ -255,13 +259,15 @@
         else if (e.detail) { // Mozilla FireFox
             nDelta= -e.detail;
         }
-        if (nDelta > 0) {
-            //HandleMouseSpin( 1, e.clientX, e.clientY );
-            goPrevious();
-        }
-        if (nDelta < 0) {
-            //HandleMouseSpin( -1, e.clientX, e.clientY );
-            goNext();
+        if (contentScrollable) {
+            if (nDelta > 0) {
+                //HandleMouseSpin( 1, e.clientX, e.clientY );
+                goPrevious();
+            }
+            if (nDelta < 0) {
+                //HandleMouseSpin( -1, e.clientX, e.clientY );
+                goNext();
+            }
         }
         if ( e.preventDefault ) {  // Mozilla FireFox
             e.preventDefault();
@@ -439,6 +445,7 @@
            count:10,
            callback: function(o) {
                images.innerHTML += o.imagesHTML;
+               contentScrollable = false;
            },
            fail: function() {
 //               //images.innerHTML = 'No images available.';
@@ -539,18 +546,28 @@
         }
     };
 
+    function onContentMouseOver(e) {
+        if (contentScrollable) {
+            e.className='corexitContentHighlighted';
+        }
+    }
+    function onContentMouseOut(e) {
+        e.className='';
+    }
+
 
 </script>
 
 <body onload="setup();">
 
     <div id="_corexitPanel">
-        <div id="_corexitContent" onMouseOver="this.className='corexitContentHighlighted'; " onMouseOut="this.className='';">
+        <div id="_corexitContent" onMouseOver="onContentMouseOver(this);" onMouseOut="onContentMouseOut(this);">
         </div>
         <div id="_corexitImages">
         </div>
     </div>
 
+    <div style="width: 48%; float: left">
     <table width="100%" id="_corexitControl" onmouseout="onControlMouseOut();" onmouseover="onControlMouseOver();" oncontextmenu="closeWindow(this); return false;">
         <tr>
             <td width="33%" align="left" id="_corexitPrev">
@@ -564,13 +581,13 @@
             </td>
         </tr>
     </table>
-
-    <div id="_corexitBottom">
+    </div>
+    <div style="width: 48%; float: right">
+        <span id="_corexitFont">
         <button onclick="fontSmaller()">[-]</button>
-        <span id="_corexitFont">&nbsp; Abc &nbsp;</span>
+        <span id="__corexitFont">&nbsp; Abc &nbsp;</span>
         <button onclick="fontLarger()">[+]</button>
-
-        <br/>
+        </span>
 
         <select id="themeSelect" onchange="onThemeChanged();">
           <option value="default-white">Black on White</option>
@@ -589,6 +606,9 @@
         <button class="smallLabel" onclick="toggleHelp()">
             [?]
         </button>
+    </div>
+    <div id="_corexitBottom" style="width: 30%; float: center">
+
 
     </div>
     
@@ -600,7 +620,8 @@
         <b>To navigate:</b> Mousewheel on displayed text, or hit left/right<br/>
         <b>To close:</b> Right click the top area, or hit escape<br/>
         <b>To adjust font size:</b> Mousewheel on bottom 'Abc' or click +/- buttons nearby.<br/>
-        <a href='#' onclick='hideHelp()' id='_corexitHelpClose'><b>[Hide]</b></a>
+        <br/>
+        <button onclick='hideHelp()' id='_corexitHelpClose'><b>[Close]</b></button>
     </div>
 
 </body>
