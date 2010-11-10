@@ -27,14 +27,17 @@ chrome.extension.onRequest.addListener(function (request, sender, callback) {
         }
 	else if (request.command == "getText") {
 		var theTextArea = document.getElementById("text");
-		callback({command: "getText", text: theTextArea.innerHTML});
+                var pageurl = document.URL;
+		callback({command: "getText", text: theTextArea.innerHTML, url: pageurl});
 	} else {
 		callback({command : "unknown"});
 	}
 });
 
-function corexit() {
-    var corexiturl = chrome.extension.getURL('corexit.html');
+function corexit(breakSentences) {
+    var corexiturl = chrome.extension.getURL('cortexit.html');
+
+    localStorage['breakSentences'] = breakSentences;
 
     var mode = localStorage["mode"];
     
@@ -98,15 +101,30 @@ function corexit() {
 }
 
 
+function corexitSentences() {
+    corexit(true);
+}
+
+function corexitZoom() {
+    corexit(false);
+}
+
 chrome.browserAction.onClicked.addListener(function(tab) {
-    corexit();
+    corexitSentences();
 });
 
 chrome.contextMenus.create({
     //'type': 'normal',
-    'title': 'Corexit',
+    'title': 'By Sentences',
     'contexts': ['selection'],
-    'onclick': corexit
+    'onclick': corexitSentences
+}, null);
+
+chrome.contextMenus.create({
+    //'type': 'normal',
+    'title': 'All at once',
+    'contexts': ['selection'],
+    'onclick': corexitZoom
 }, null);
 
 

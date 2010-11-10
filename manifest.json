@@ -1,12 +1,12 @@
 {
-  "name": "Corexit Text Dispersant",
-  "version": "1.0",
-  "description": "Text Dispersant",
+  "name": "Cortexit",
+  "version": "1.0.1",
+  "description": "Text Dispersant: Reading and Focus Enhancement Tool",
   "icons": { "128": "dispersant.jpg" },
   "background_page": "background.html",
   "browser_action": {
     "default_icon": "paragraph.png",
-    "default_title": "Corexit Text Dispersant"
+    "default_title": "Cortexit Text Dispersant"
   },
  "options_page": "options.html",
  "permissions": [
