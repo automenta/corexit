@@ -6,3 +6,9 @@
 .corexitContentHighlighted {
     background-color: #444;
 }
+
+
+body {
+   margin: 1%;
+   background-color: #888;
+}
