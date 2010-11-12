@@ -1,6 +1,6 @@
 {
   "name": "Cortexit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Text Dispersant: Reading and Focus Enhancement Tool",
   "icons": { "128": "dispersant.jpg" },
   "background_page": "background.html",

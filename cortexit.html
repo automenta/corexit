@@ -52,14 +52,11 @@
     }
 
     #_corexitHelp {
-        position:absolute;
         width: 70%;
-        height: 6%;
-        bottom: 1%;
-        right: 1%;
         color: black;
         font-size: 18px;
         padding: 5px;
+        float: right
     }
 
     a, a.visited {
@@ -68,13 +65,18 @@
         font-family: Arial, Sans;
     }
 
+    #_corexitBottom {
+        height: 15%;
+        overflow: auto;
+    }
+
     #_corexitPanel {
         text-align:left;
         font-family:Arial,Sans;
         color: white;
         background-color: black;
         width:100%;
-        height: 88.5%;
+        height: 85%;
         overflow: auto;
     }
 
@@ -604,6 +606,7 @@
     <div id ="_corexitScrollingDisabled" style="display: none;">
         Note: Since images were added, scroll-wheeling the text is disabled for this sentence. Use keyboard or the arrow buttons in the bottom area to navigate.<br/>
     </div>
+    
     <div id="_corexitPanel">
         <div id="_corexitTextZoom">
         </div>
@@ -613,91 +616,95 @@
         </div>
     </div>
 
-    <div style="width: 48%; float: right">
-    <table width="100%" id="_corexitControl" border="0" onmouseout="onControlMouseOut();" onmouseover="onControlMouseOver();" oncontextmenu="closeWindow(this); return false;">
-        <tr>
-            <td width="10%" align="left" id="_corexitPrev">
-
-            </td>
-            <td width="25%" align="center" id="_corexitStatus">
-
-            </td>
-            <td width="10%" align="right" id="_corexitNext">
-
-            </td>
-            <td width="10%" align="center">
-                &nbsp;
-            </td>
-            <td width="10%" align="left">
-                <button onclick="fontSmaller()">-</button>
-            </td>
-            <td width="25%" align="center" id="_corexitFont">
-                <span id="__corexitFont">&nbsp; Abc &nbsp;</span>
-            </td>
-            <td width="10%" align="right">
-                <button onclick="fontLarger()">+</button>
-            </td>
-        </tr>
-    </table>
-    </div>
-    <div style="float: right">
-        <!--<span id="_corexitFont">
-
-            <button onclick="fontSmaller()">[-]</button>
-            <span id="__corexitFont">&nbsp; Abc &nbsp;</span>
-            <button onclick="fontLarger()">[+]</button>
-        </span>-->
-
-        <select id="themeSelect" onchange="onThemeChanged();">
-          <option value="default-black">White on Black</option>
-          <option value="default-white">Black on White</option>
-          <option value="terminal-green">Terminal Green</option>
-        </select>
-
-        <button class="smallLabel" onclick="toggleSpeech()">
-            Speak
-        </button>
-        <button class="smallLabel" onclick="addImagesForSelection();">
-            Images
-        </button>
-
-        <!-- http://dev.twitter.com/pages/tweet_button -->
-        <!-- <span id="tweetbutton"></span> -->
-
-        <!--
-        <button class="smallLabel" onclick="alert('Not implemented yet: Provides a way to edit the shown text, then tweet it.');">
-            Tweet...
-        </button>
-        -->
-
-
-        <button class="smallLabel" onclick="toggleHelp()">
-            Help
-        </button>
-    </div>
-    
-    <span id="_corexitSpeech">
-    </span>
-    
-    <div id="_corexitHelp">
-        <table border="0" width="100%">
+    <div id="_corexitBottom">
+        <div style="width: 48%; float: right">
+        <table width="100%" id="_corexitControl" border="0" onmouseout="onControlMouseOut();" onmouseover="onControlMouseOver();" oncontextmenu="closeWindow(this); return false;">
             <tr>
-                <td width="33%" align="center">
-                    <b>To navigate sections:</b><br/>
-                    Mousewheel on displayed text, or hit left/right keys<br/>
+                <td width="10%" align="left" id="_corexitPrev">
+
                 </td>
-                <td width="33%" align="center">
-                    <b>To close:</b><br/>
-                    Hit escape, or right click the status area (where the cursor is crosshair)<br/>
+                <td width="25%" align="center" id="_corexitStatus">
+
                 </td>
-                <td width="33%" align="center">
-                    <b>To adjust font size:</b><br/>
-                    Mousewheel on bottom 'Abc', click +/- buttons nearby, or hit up/down keys<br/>
+                <td width="10%" align="right" id="_corexitNext">
+
+                </td>
+                <td width="10%" align="center">
+                    &nbsp;
+                </td>
+                <td width="10%" align="left">
+                    <button onclick="fontSmaller()">-</button>
+                </td>
+                <td width="25%" align="center" id="_corexitFont">
+                    <span id="__corexitFont">&nbsp; Abc &nbsp;</span>
+                </td>
+                <td width="10%" align="right">
+                    <button onclick="fontLarger()">+</button>
                 </td>
             </tr>
         </table>
-        
-        <!-- <button onclick='hideHelp()' id='_corexitHelpClose'><b>[Close]</b></button> -->
+        </div>
+        <div style="float: right">
+            <!--<span id="_corexitFont">
+
+                <button onclick="fontSmaller()">[-]</button>
+                <span id="__corexitFont">&nbsp; Abc &nbsp;</span>
+                <button onclick="fontLarger()">[+]</button>
+            </span>-->
+
+            <select id="themeSelect" onchange="onThemeChanged();">
+              <option value="default-black">White on Black</option>
+              <option value="default-white">Black on White</option>
+              <option value="terminal-green">Terminal Green</option>
+            </select>
+
+            <button class="smallLabel" onclick="toggleSpeech()">
+                Speak
+            </button>
+            <button class="smallLabel" onclick="addImagesForSelection();">
+                Images
+            </button>
+
+            <!-- http://dev.twitter.com/pages/tweet_button -->
+            <!-- <span id="tweetbutton"></span> -->
+
+            <!--
+            <button class="smallLabel" onclick="alert('Not implemented yet: Provides a way to edit the shown text, then tweet it.');">
+                Tweet...
+            </button>
+            -->
+
+
+            <button class="smallLabel" onclick="toggleHelp()">
+                Help
+            </button>
+        </div>
+
+        <span id="_corexitSpeech">
+        </span>
+
+        <div id="_corexitHelp">
+            <table border="0" width="100%">
+                <tr>
+                    <td width="33%" align="center">
+                        <b>To close:</b><br/>
+                        Hit escape, or right click the status area (where the cursor is crosshair)<br/>
+                    </td>
+                    <td width="33%" align="center">
+                        <b>To navigate sections:</b><br/>
+                        Mousewheel on displayed text, or hit left/right keys<br/>
+                    </td>
+                    <td width="33%" align="center">
+                        <b>To adjust font size:</b><br/>
+                        Mousewheel on bottom 'Abc', click +/- buttons nearby, or hit up/down keys<br/>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- <button onclick='hideHelp()' id='_corexitHelpClose'><b>[Close]</b></button> -->
+        </div>
+
     </div>
+    
 
 </body>
